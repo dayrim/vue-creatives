@@ -7,7 +7,7 @@ import Contact from './components/Contact.vue'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-
+import 'animate.css/animate.min.css'
 
 export const eventBus = new Vue()
 Vue.use(BootstrapVue)

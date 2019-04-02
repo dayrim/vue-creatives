@@ -1,6 +1,59 @@
 <template>
-<div class="container">
-   <div class="row">
+<div class="container" id="app" :class="{ready: isPageReady}">
+       <div class="row">
+            <div class="col">
+ 
+                <button class="btn btn-primary" @click="show = !show">
+                Toggle Menu
+                </button>    
+              
+                <button class="btn btn-primary" @click="toggleMenu">
+                Toggle another Menu
+                </button>   
+
+                <button class="btn btn-primary" @click="changeShape">
+                Switch Shape
+                </button>    
+                <hr>
+                <nav>
+                    <ul>
+                        <li>
+                        <transition name="menu-item1" mode="out-in">
+                        <a class="menu-item" key="item1" v-if="show">Blog Post </a> 
+                        <!-- <a class="menu-item" key="intro" v-else>Menu ninja</a>  -->
+                        </transition>
+                        </li>
+
+                        <li>
+                        <transition name="menu-item2">
+                        <a class="menu-item" key="item2" v-if="show">Article</a> 
+                        </transition>
+                        </li>
+
+
+                        <li>
+                        <transition name="menu-item3">
+                        <a class="menu-item" key="item3" v-if="show">Contact Us</a> 
+                        </transition>
+                        </li>
+                    </ul>
+                </nav>
+                <transition name="shape" mode="out-in">
+                <component  :is="shape"></component>
+                </transition>
+                <nav >
+                              <ul>
+                <transition-group name="menu" appear>
+                        <li :key="index" v-for="(item, index) in visibleMenuItems" >
+                        <a class="menu-item" >{{item}}</a> 
+                        </li >
+                </transition-group>
+                            </ul>
+                </nav>
+                    </div>
+                </div>
+
+        <div class="row">
             <div class="col">
                 <h1>Add Blog Post</h1>
 
@@ -87,6 +140,7 @@
                 </table>
             </div>
         </div>
+              
   <div class="row">
     <div class="col-xs-12">
       <announcement></announcement>
@@ -106,10 +160,23 @@
 </template>
 
 <script>
+import Square from './components/Square.vue'
+import Circle from './components/Circle.vue'
     export default {
         data() {
             return {
+              show:false,
+              shape: 'appSquare',
+              isPageReady: false,
+              menuItems: ['Blog Post','Article','Contact'],
+              visibleMenuItems: [],
               isSubmitted: false,
+              moreStyles: {
+                    'border-radius': '5px',
+                    'display': 'flex',
+                    'justify-content': 'center',
+                    'align-items': 'center'
+              },
                 post: {
                     title: '',
                     content: '',
@@ -127,13 +194,122 @@
                     ]
                 }
             };
+        },
+        methods: {
+            changeShape(){
+                if (this.shape === 'appSquare'){
+                    this.shape = 'appCircle'
+                }else{
+                    this.shape = 'appSquare'
+                }
+            },
+            toggleMenu(){
+            if(this.visibleMenuItems.length < 1){
+                    this.menuItems.map((item, index)=>{
+                        setTimeout(()=>{
+                            this.visibleMenuItems.push(item)
+                        },250*(index+1))
+                    })
+                }
+                else{
+                    this.visibleMenuItems=[]
+                }
+            }
+        },
+        mounted: function() {
+            this.$nextTick(function() {
+            setTimeout(() => {
+                this.isPageReady = true;
+            }, 0)
+        });
+        
+        },
+        components:{
+            appSquare: Square,
+            appCircle: Circle
         }
     }
 </script>
 
 <style>
+    ul{
+        list-style: none;
+    }
+    .btn{
+        margin-right: 20px;
+    }
     input[type="radio"] + label,
     input[type="checkbox"] + label {
         font-weight: normal;
+    }
+    .menu-item{
+        display: inline-block;
+    }
+
+    .menu-item1-enter-active{
+        animation: pulse 0.5s;
+    }
+    .menu-item1-leave-active{
+        animation: fade-out 1s;
+    }
+
+    .menu-item2-enter-active{
+        animation: pulse 0.75s;
+    }
+    .menu-item2-leave-active{
+        animation: fade-out 1s;
+    }
+    .menu-item3-enter-active{
+        animation: pulse 1s;
+    }
+    .menu-item3-leave-active{
+        animation: fade-out 1s;
+    }
+    #app.ready {
+        opacity: 1;
+    }
+
+    .shape-enter-active, .shape-leave-active{
+        transition: opacity 1s ease;
+    }
+
+    .shape-enter, .shape-leave-to{
+        opacity: 0;
+    }
+    #app {
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    .menu-enter-active, .menu-leave-active{
+        transition: all 0.75s ease;
+    }
+
+    .menu-enter, .menu-leave{
+        opacity:0;
+        transform: rotate(45deg) translateY(-30px);
+    }
+    @keyframes fade-out{
+        from{
+            opacity:1;
+            transition: opacity;
+        }
+
+        to{
+            opacity: 0;
+        }
+    }
+
+    @keyframes pulse{
+        from{
+            transform: scale3d(1,1,1)
+        }
+
+        50%{
+            transform: scale3d(1.2,1.2,1.2);
+        }
+
+        to{
+            transform: scale3d(1,1,1)
+        }
     }
 </style>
