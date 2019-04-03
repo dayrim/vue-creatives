@@ -205,14 +205,18 @@ import Circle from './components/Circle.vue'
             },
             toggleMenu(){
             if(this.visibleMenuItems.length < 1){
-                    this.menuItems.map((item, index)=>{
+                    this.menuItems.forEach((item, index)=>{
                         setTimeout(()=>{
                             this.visibleMenuItems.push(item)
                         },250*(index+1))
                     })
                 }
                 else{
-                    this.visibleMenuItems=[]
+                    this.menuItems.forEach((item,index)=>{
+                        setTimeout(()=>{
+                        this.visibleMenuItems.splice(-1,1)
+                        },250*(index+1))
+                    })
                 }
             }
         },
@@ -284,7 +288,7 @@ import Circle from './components/Circle.vue'
         transition: all 0.75s ease;
     }
 
-    .menu-enter, .menu-leave{
+    .menu-enter, .menu-leave-to{
         opacity:0;
         transform: rotate(45deg) translateY(-30px);
     }
