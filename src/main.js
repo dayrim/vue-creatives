@@ -1,22 +1,18 @@
-import Vue from 'vue'
-import App from './App.vue'
-import BootstrapVue from 'bootstrap-vue'
-import Announcement from './components/Announcement.vue'
-import Article from './components/Article.vue'
-import Contact from './components/Contact.vue'
+import Vue from 'vue';
+import App from './App.vue';
+import store from './data/store';
+import VeeValidate from 'vee-validate';
+import { ValidationProvider } from 'vee-validate';
 
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-import 'animate.css/animate.min.css'
+// Register it globally
+// main.js or any entry file.
 
-export const eventBus = new Vue()
-Vue.use(BootstrapVue)
+Vue.use(VeeValidate);
+Vue.component('ValidationProvider', ValidationProvider);
 
-Vue.config.productionTip = false
-Vue.component('announcement',Announcement);
-Vue.component('appArticle',Article);
-Vue.component('appContact',Contact);
+Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+  store,
+  render: h => h(App)
+}).$mount('#app');

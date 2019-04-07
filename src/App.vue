@@ -1,319 +1,227 @@
 <template>
-<div class="container" id="app" :class="{ready: isPageReady}">
-       <div class="row">
-            <div class="col">
- 
-                <button class="btn btn-primary" @click="show = !show">
-                Toggle Menu
-                </button>    
-              
-                <button class="btn btn-primary" @click="toggleMenu">
-                Toggle another Menu
-                </button>   
-
-                <button class="btn btn-primary" @click="changeShape">
-                Switch Shape
-                </button>    
-                <hr>
-                <nav>
-                    <ul>
-                        <li>
-                        <transition name="menu-item1" mode="out-in">
-                        <a class="menu-item" key="item1" v-if="show">Blog Post </a> 
-                        <!-- <a class="menu-item" key="intro" v-else>Menu ninja</a>  -->
-                        </transition>
-                        </li>
-
-                        <li>
-                        <transition name="menu-item2">
-                        <a class="menu-item" key="item2" v-if="show">Article</a> 
-                        </transition>
-                        </li>
-
-
-                        <li>
-                        <transition name="menu-item3">
-                        <a class="menu-item" key="item3" v-if="show">Contact Us</a> 
-                        </transition>
-                        </li>
-                    </ul>
-                </nav>
-                <transition name="shape" mode="out-in">
-                <component  :is="shape"></component>
-                </transition>
-                <nav >
-                              <ul>
-                <transition-group name="menu" appear>
-                        <li :key="index" v-for="(item, index) in visibleMenuItems" >
-                        <a class="menu-item" >{{item}}</a> 
-                        </li >
-                </transition-group>
-                            </ul>
-                </nav>
-                    </div>
-                </div>
-
-        <div class="row">
-            <div class="col">
-                <h1>Add Blog Post</h1>
-
-                <form @submit.prevent="isSubmitted = true">
-                    <div class="form-group">
-                        <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" v-model.trim="post.title">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="content">Content</label>
-                        <textarea class="form-control" id="content" v-model.lazy.trim="post.content" cols="30" rows="10"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                      <input type="checkbox" id="publish-immediately" true-value="immediately" false-value="later" v-model="post.publishImmediately">
-                      <label for="content">Publish Immediately</label>
-                    </div>
-
-                    <div class="form-group">
-                      <label>Share on</label>
-                      <div v-for="(media, index) in formData.socialMedia" :key="index">
-                        <input type="checkbox" :id="media" :value="media" v-model="post.shareOn" >
-                        <label :for="media">{{media}}</label>
-                        </div>
-                        </div>
-
-                                            <div class="form-group">
-                      <label>Category</label>
-                      <div v-for="(category, index) in formData.categories" :key="index">
-                        <input type="radio" :id="category" :value="category" v-model="post.category" >
-                        <label :for="category">{{category}}</label>
-                        </div>
-                        </div>
-
-                    <div class="form-group">
-                      <select class="form-control" id="select-series" v-model="post.series">
-                        <option value="">Choose series</option>
-                        <option v-for="(series,index) in formData.series" :key="index" :value="series">{{series}}</option>
-                      </select></div>
-
-                      <input type="submit" class="btn btn-primary" value="Publish">
-                </form>
-
-                <hr>
-
-                <table class="table table-striped" v-if="isSubmitted">
-                    <thead>
-                        <tr>
-                            <td class="col-xs-6"><strong>Field</strong></td>
-                            <td class="col-xs-6"><strong>Value</strong></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Title</td>
-                            <td>{{ post.title }}</td>
-                        </tr>
-                        <tr>
-                            <td>Content</td>
-                            <td style="white-space: pre;">{{ post.content }}</td>
-                        </tr>
-                        <tr>
-                            <td>Publish immediately</td>
-                            <td>{{ post.publishImmediately }}</td>
-                        </tr>
-                        <tr>
-                            <td>Share on</td>
-                            <td>
-                                <ul>
-                                    <li v-for="(media,index) in post.shareOn" :key="index">{{ media }}</li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Category</td>
-                            <td>{{ post.category }}</td>
-                        </tr>
-                        <tr>
-                            <td>Series</td>
-                            <td>{{ post.series }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-              
-  <div class="row">
-    <div class="col-xs-12">
-      <announcement></announcement>
-      <appArticle></appArticle>
-      <hr>
-
-      <appContact>
-        <p>Some content</p>
-        <p slot="top">Contact us and one of our representives will get back to you as soon as possible</p>
-        <p slot="bottom">Please do not submit any sensitive information</p>
-      </appContact>
-      </div>
+  <div id="app" :class="{ ready: isPageReady }">
+    <div class="container">
+      <creative-list></creative-list>
     </div>
-           
   </div>
-  
 </template>
 
 <script>
-import Square from './components/Square.vue'
-import Circle from './components/Circle.vue'
-    export default {
-        data() {
-            return {
-              show:false,
-              shape: 'appSquare',
-              isPageReady: false,
-              menuItems: ['Blog Post','Article','Contact'],
-              visibleMenuItems: [],
-              isSubmitted: false,
-              moreStyles: {
-                    'border-radius': '5px',
-                    'display': 'flex',
-                    'justify-content': 'center',
-                    'align-items': 'center'
-              },
-                post: {
-                    title: '',
-                    content: '',
-                    publishImmediately: 'immediately',
-                    shareOn: ['Facebook'],
-                    category: 'Backend',
-                    series: 'Complete Guide to Elasticsearch'
-                },
-                formData: {
-                    socialMedia: ['Facebook', 'Twitter'],
-                    categories: ['Frontend', 'Backend'],
-                    series: [
-                        'Vue.js: From Beginner to Professional',
-                        'Complete Guide to Elasticsearch'
-                    ]
-                }
-            };
-        },
-        methods: {
-            changeShape(){
-                if (this.shape === 'appSquare'){
-                    this.shape = 'appCircle'
-                }else{
-                    this.shape = 'appSquare'
-                }
-            },
-            toggleMenu(){
-            if(this.visibleMenuItems.length < 1){
-                    this.menuItems.forEach((item, index)=>{
-                        setTimeout(()=>{
-                            this.visibleMenuItems.push(item)
-                        },250*(index+1))
-                    })
-                }
-                else{
-                    this.menuItems.forEach((item,index)=>{
-                        setTimeout(()=>{
-                        this.visibleMenuItems.splice(-1,1)
-                        },250*(index+1))
-                    })
-                }
-            }
-        },
-        mounted: function() {
-            this.$nextTick(function() {
-            setTimeout(() => {
-                this.isPageReady = true;
-            }, 0)
-        });
-        
-        },
-        components:{
-            appSquare: Square,
-            appCircle: Circle
-        }
-    }
+import CreativeList from './components/CreativeList.vue';
+export default {
+  components: {
+    creativeList: CreativeList
+  },
+  data() {
+    return {
+      isPageReady: false
+    };
+  },
+  mounted: function() {
+    this.$nextTick(function() {
+      setTimeout(() => {
+        this.isPageReady = true;
+      }, 0);
+    });
+  }
+};
 </script>
 
-<style>
-    ul{
-        list-style: none;
-    }
-    .btn{
-        margin-right: 20px;
-    }
-    input[type="radio"] + label,
-    input[type="checkbox"] + label {
-        font-weight: normal;
-    }
-    .menu-item{
-        display: inline-block;
-    }
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+$primary-color: #1f2734;
+$secondary-color: #fcaf19;
+$tertiary-color: #3388ff;
 
-    .menu-item1-enter-active{
-        animation: pulse 0.5s;
-    }
-    .menu-item1-leave-active{
-        animation: fade-out 1s;
-    }
+$nav-color: #3e4a5e;
+$default-color: #e5e5e5;
 
-    .menu-item2-enter-active{
-        animation: pulse 0.75s;
-    }
-    .menu-item2-leave-active{
-        animation: fade-out 1s;
-    }
-    .menu-item3-enter-active{
-        animation: pulse 1s;
-    }
-    .menu-item3-leave-active{
-        animation: fade-out 1s;
-    }
-    #app.ready {
-        opacity: 1;
-    }
+$default-font: 'Roboto', sans-serif;
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  background-color: $primary-color;
+  font-family: $default-font;
+  font-size: 14px;
+  letter-spacing: 1px;
+  line-height: 18px;
+  font-style: normal;
+  font-weight: normal;
+  color: $default-color;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  * {
+    box-sizing: border-box;
+  }
+}
+.container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: $secondary-color;
+}
+h3 {
+  font-size: 18px;
+  line-height: 23px;
+  font-style: normal;
+  font-weight: normal;
+}
+hr {
+  border: 0.5px solid $nav-color;
+  margin: 20px 0 20px 0;
+}
+p {
+}
+input[type='radio'] {
+  margin: 0;
+}
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+input[type='text'],
+input[type='number'] {
+  background-color: $nav-color;
+  border: 1px solid $nav-color;
+  border-radius: 3px;
+  color: $default-color;
+  font-size: 14px;
+  line-height: 18px;
+  font-style: normal;
+  font-weight: normal;
+  padding: 0 10px 0 10px;
+  text-align: start;
+  text-decoration: none;
+  height: 32px;
+  &::placeholder {
+    color: $default-color;
+  }
+}
+button {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $tertiary-color; /* Green */
+  border: none;
+  color: $default-color;
+  border-radius: 3px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 104px;
+  height: 32px;
+  &:active,
+  &:hover,
+  .active {
+    background-color: $nav-color;
+  }
+}
+button {
+  transition: background-color 0.2s linear;
+}
+#app {
+  opacity: 0;
+  transition: opacity 1s ease;
+  .ready {
+    display: none;
+  }
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
 
-    .shape-enter-active, .shape-leave-active{
-        transition: opacity 1s ease;
-    }
+table td,
+table th {
+  padding: 8px;
+}
+table th:first-child {
+  border-radius: 5px 0 0 0;
+}
+table th:last-child {
+  border-radius: 0 5px 0 0;
+}
+table tr:nth-child(even) {
+  background-color: rgba($nav-color, 0.1);
+}
+table tr:nth-child(odd) {
+  background-color: lighten(rgba($primary-color, 0.1), 10%);
+}
 
-    .shape-enter, .shape-leave-to{
-        opacity: 0;
-    }
-    #app {
-        opacity: 0;
-        transition: opacity 1s;
-    }
-    .menu-enter-active, .menu-leave-active{
-        transition: all 0.75s ease;
-    }
+table tr:hover {
+  background-color: $nav-color;
+}
 
-    .menu-enter, .menu-leave-to{
-        opacity:0;
-        transform: rotate(45deg) translateY(-30px);
-    }
-    @keyframes fade-out{
-        from{
-            opacity:1;
-            transition: opacity;
-        }
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgba($tertiary-color, 0.1);
+  color: $secondary-color;
+  font-weight: normal;
+}
 
-        to{
-            opacity: 0;
-        }
-    }
-
-    @keyframes pulse{
-        from{
-            transform: scale3d(1,1,1)
-        }
-
-        50%{
-            transform: scale3d(1.2,1.2,1.2);
-        }
-
-        to{
-            transform: scale3d(1,1,1)
-        }
-    }
+#app.ready {
+  opacity: 1;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s linear;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+.fadeUp-enter-active {
+  animation: fadeInUp 0.4s;
+}
+.fadeUp-leave-active {
+  animation: fadeOutUp 0.4s;
+}
+.fadeUp-move {
+  transition: transform 0.2s;
+}
+.fadeInUp-enter-active {
+  animation: fadeInUp 0.4s;
+}
+.fadeInUp-move {
+  transition: transform 0.2s;
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeOutUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+}
 </style>
