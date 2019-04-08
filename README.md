@@ -1,6 +1,6 @@
 # Vue creatives
 
-Visit https://vue-creatives.herokuapp.com/ to see the app online.
+Visit https://vue-creatives.herokuapp.com/ to see the app online. Mockup: https://www.figma.com/file/UCt1aPkN1qOVdAboDO99gdAl/Test---Creative-list
 
 ## Local installation guide
 
