@@ -241,7 +241,6 @@ input[type='radio'] + label > span > span {
   display: inline-block;
   width: 10px;
   height: 10px;
-  vertical-align: middle;
   border-radius: 50%;
 }
 
