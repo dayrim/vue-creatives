@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     creatives: [],
-    addMode: true
+    addMode: false
   },
   mutations: {
     [ADD_CREATIVE](state, payload) {
