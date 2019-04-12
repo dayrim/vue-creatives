@@ -20,9 +20,7 @@
                 type="text"
               />
               <transition name="fadeUp">
-                <span v-show="errors.has('name')" class="error">{{
-                  errors.first('name')
-                }}</span>
+                <span v-show="errors.has('name')" class="error">{{ errors.first("name") }}</span>
               </transition>
             </div>
           </div>
@@ -30,11 +28,7 @@
         <div class="flex-row">
           <label class="flex-label">Device: </label>
           <div class="flex-input">
-            <div
-              v-for="(device, index) in formData.devices"
-              :key="index"
-              class="device-control"
-            >
+            <div v-for="(device, index) in formData.devices" :key="index" class="device-control">
               <input
                 :id="device"
                 v-model="creative.device"
@@ -43,10 +37,7 @@
                 :value="device"
                 :checked="'checked'"
               />
-              <button
-                type="button"
-                :class="creative.device === device ? 'active' : null"
-              >
+              <button type="button" :class="creative.device === device ? 'active' : null">
                 <label :for="device">{{ device }}</label>
               </button>
             </div>
@@ -55,17 +46,8 @@
         <div class="flex-row">
           <label class="flex-label">Placement size: </label>
           <div class="flex-input">
-            <div
-              v-for="(size, index) in formData.size"
-              :key="index"
-              class="size-control"
-            >
-              <input
-                :id="size"
-                v-model="creative.size"
-                type="radio"
-                :value="size"
-              />
+            <div v-for="(size, index) in formData.size" :key="index" class="size-control">
+              <input :id="size" v-model="creative.size" type="radio" :value="size" />
 
               <label :for="size"
                 ><span><span></span></span>{{ size }}</label
@@ -93,11 +75,9 @@
               />
 
               <transition name="fadeUp">
-                <span
-                  v-show="errors.has(dimension) && creative.size === 'Size'"
-                  class="error"
-                  >{{ errors.first(dimension) }}</span
-                >
+                <span v-show="errors.has(dimension) && creative.size === 'Size'" class="error">{{
+                  errors.first(dimension)
+                }}</span>
               </transition>
               <label :for="dimension">{{ dimension | firstLetter }}</label>
             </div>
@@ -106,11 +86,7 @@
         <hr class="line-break" />
       </div>
       <div class="card-footer">
-        <button
-          type="reset"
-          class="close-button"
-          @click.prevent="toggleAddMode"
-        >
+        <button type="reset" class="close-button" @click.prevent="toggleAddMode">
           Close
         </button>
         <button type="submit" value="Publish">Create</button>
@@ -120,35 +96,35 @@
 </template>
 
 <script>
-import { ADD_CREATIVE, TOGGLE_ADD_MODE } from '../data/constants';
+import { ADD_CREATIVE, TOGGLE_ADD_MODE } from "../data/constants";
 
 export default {
   filters: {
     capitalize: function(value) {
-      if (!value) return '';
+      if (!value) return "";
       value = value.toString();
       return value.charAt(0).toUpperCase() + value.slice(1);
     },
     firstLetter: function(value) {
-      if (!value) return '';
+      if (!value) return "";
       value = value.toString();
       return value.charAt(0).toUpperCase();
-    }
+    },
   },
   data() {
     return {
       creative: {
-        name: '',
-        device: 'Mobile',
-        size: 'Fullscreen'
+        name: "",
+        device: "Mobile",
+        size: "Fullscreen",
       },
       formData: {
-        devices: ['Mobile', 'Desctop'],
-        size: ['Fullscreen', 'Size'],
-        dimensions: ['width', 'height'],
+        devices: ["Mobile", "Desctop"],
+        size: ["Fullscreen", "Size"],
+        dimensions: ["width", "height"],
         width: null,
-        height: null
-      }
+        height: null,
+      },
     };
   },
   computed: {
@@ -159,11 +135,11 @@ export default {
       return this.creative.device;
     },
     size() {
-      if (this.creative.size == 'Size') {
+      if (this.creative.size == "Size") {
         return `${this.formData.width}x${this.formData.height}`;
       }
       return this.creative.size;
-    }
+    },
   },
 
   methods: {
@@ -187,8 +163,8 @@ export default {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -205,7 +181,7 @@ export default {
   border: 1px solid #ffffff17;
 }
 .error::after {
-  content: '';
+  content: "";
   position: absolute;
   z-index: 0;
   bottom: 100%;
@@ -217,7 +193,7 @@ export default {
 }
 .size-control {
   width: 104px;
-  input[type='radio'] {
+  input[type="radio"] {
     display: none;
   }
 }
@@ -227,7 +203,7 @@ export default {
     width: 100%;
   }
 }
-input[type='radio'] + label > span {
+input[type="radio"] + label > span {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -237,19 +213,19 @@ input[type='radio'] + label > span {
   text-align: center;
   border-radius: 50%;
 }
-input[type='radio'] + label > span > span {
+input[type="radio"] + label > span > span {
   display: inline-block;
   width: 10px;
   height: 10px;
   border-radius: 50%;
 }
 
-input[type='radio']:checked + label > span > span {
+input[type="radio"]:checked + label > span > span {
   background-color: #3388ff;
 }
 
-input[type='radio'] + label span,
-input[type='radio']:checked + label span {
+input[type="radio"] + label span,
+input[type="radio"]:checked + label span {
   transition: background-color 0.2s linear;
 }
 

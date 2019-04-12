@@ -36,11 +36,11 @@
   </div>
 </template>
 <script>
-import NewCreative from './NewCreative.vue';
-import { TOGGLE_ADD_MODE, REMOVE_CREATIVE } from '../data/constants';
+import NewCreative from "./NewCreative.vue";
+import { TOGGLE_ADD_MODE, REMOVE_CREATIVE } from "../data/constants";
 export default {
   components: {
-    newCreative: NewCreative
+    newCreative: NewCreative,
   },
   computed: {
     addMode() {
@@ -48,7 +48,7 @@ export default {
     },
     creatives() {
       return this.$store.state.creatives;
-    }
+    },
   },
   methods: {
     [TOGGLE_ADD_MODE]() {
@@ -56,8 +56,8 @@ export default {
     },
     [REMOVE_CREATIVE](id) {
       this.$store.dispatch(REMOVE_CREATIVE, id);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped lang="scss">
@@ -69,7 +69,7 @@ table {
   margin-top: 40px;
   &:before {
     font-size: 10px;
-    content: '* Click to remove a creative';
+    content: "* Click to remove a creative";
   }
 }
 </style>

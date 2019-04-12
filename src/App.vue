@@ -7,14 +7,14 @@
 </template>
 
 <script>
-import CreativeList from './components/CreativeList.vue';
+import CreativeList from "./components/CreativeList.vue";
 export default {
   components: {
-    creativeList: CreativeList
+    creativeList: CreativeList,
   },
   data() {
     return {
-      isPageReady: false
+      isPageReady: false,
     };
   },
   mounted: function() {
@@ -23,12 +23,12 @@ export default {
         this.isPageReady = true;
       }, 0);
     });
-  }
+  },
 };
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url("https://fonts.googleapis.com/css?family=Roboto");
 $primary-color: #1f2734;
 $secondary-color: #fcaf19;
 $tertiary-color: #3388ff;
@@ -36,7 +36,7 @@ $tertiary-color: #3388ff;
 $nav-color: #3e4a5e;
 $default-color: #e5e5e5;
 
-$default-font: 'Roboto', sans-serif;
+$default-font: "Roboto", sans-serif;
 html {
   height: 100%;
 }
@@ -81,19 +81,19 @@ hr {
 }
 p {
 }
-input[type='radio'] {
+input[type="radio"] {
   margin: 0;
 }
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
-input[type='text'],
-input[type='number'] {
+input[type="text"],
+input[type="number"] {
   background-color: $nav-color;
   border: 1px solid $nav-color;
   border-radius: 3px;
@@ -110,7 +110,6 @@ input[type='number'] {
     color: $default-color;
   }
 }
-
 button {
   font-style: normal;
   font-weight: normal;
@@ -145,11 +144,10 @@ button {
   }
 }
 table {
+  border-collapse: collapse;
   width: 100%;
 }
-table td {
-  width: calc(100% / 3);
-}
+
 table td,
 table th {
   padding: 8px;

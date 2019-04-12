@@ -1,12 +1,12 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import { ADD_CREATIVE, TOGGLE_ADD_MODE, REMOVE_CREATIVE } from './constants';
+import Vue from "vue";
+import Vuex from "vuex";
+import { ADD_CREATIVE, TOGGLE_ADD_MODE, REMOVE_CREATIVE } from "./constants";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     creatives: [],
-    addMode: false
+    addMode: false,
   },
   mutations: {
     [ADD_CREATIVE](state, payload) {
@@ -20,10 +20,8 @@ export default new Vuex.Store({
       }
     },
     [REMOVE_CREATIVE](state, payload) {
-      state.creatives = state.creatives.filter(
-        creative => creative.id !== payload
-      );
-    }
+      state.creatives = state.creatives.filter(creative => creative.id !== payload);
+    },
   },
   actions: {
     [ADD_CREATIVE]({ commit }, payload) {
@@ -34,6 +32,6 @@ export default new Vuex.Store({
     },
     [REMOVE_CREATIVE]({ commit }, payload) {
       commit(REMOVE_CREATIVE, payload);
-    }
-  }
+    },
+  },
 });
