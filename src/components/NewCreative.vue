@@ -1,9 +1,7 @@
 <template>
   <div class="card">
     <form @submit.prevent="validateBeforeSubmit">
-      <div class="card-title">
-        <h3>New Creative</h3>
-      </div>
+      <div class="card-title"><h3>New Creative</h3></div>
       <div class="card-body">
         <p>General info</p>
         <hr class="line-break" />
@@ -86,90 +84,86 @@
         <hr class="line-break" />
       </div>
       <div class="card-footer">
-        <button type="reset" class="close-button" @click.prevent="toggleAddMode">
-          Close
-        </button>
+        <button type="reset" class="close-button" @click.prevent="toggleAddMode">Close</button>
         <button type="submit" value="Publish">Create</button>
       </div>
     </form>
   </div>
 </template>
 
-<script>
-import { ADD_CREATIVE, TOGGLE_ADD_MODE } from "../data/constants";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import CreativesModule from "@/store/modules/creatives/creatives";
+import FirestoreModule from "@/store/modules/firestore/firestore";
 
-export default {
+@Component({
   filters: {
-    capitalize: function(value) {
+    capitalize: function(value: string) {
       if (!value) return "";
       value = value.toString();
       return value.charAt(0).toUpperCase() + value.slice(1);
     },
-    firstLetter: function(value) {
+    firstLetter: function(value: string) {
       if (!value) return "";
       value = value.toString();
       return value.charAt(0).toUpperCase();
     },
   },
-  data() {
-    return {
-      creative: {
-        name: "",
-        device: "Mobile",
-        size: "Fullscreen",
-      },
-      formData: {
-        devices: ["Mobile", "Desctop"],
-        size: ["Fullscreen", "Size"],
-        dimensions: ["width", "height"],
-        width: null,
-        height: null,
-      },
-    };
-  },
-  computed: {
-    name() {
-      return this.creative.name;
-    },
-    device() {
-      return this.creative.device;
-    },
-    size() {
-      if (this.creative.size == "Size") {
-        return `${this.formData.width}x${this.formData.height}`;
-      }
-      return this.creative.size;
-    },
-  },
+})
+export default class NewCreative extends Vue {
+  public creative = {
+    name: "",
+    device: "Mobile",
+    size: "Fullscreen",
+  };
+  public formData = {
+    devices: ["Mobile", "Desctop"],
+    size: ["Fullscreen", "Size"],
+    dimensions: ["width", "height"],
+    width: null,
+    height: null,
+  };
+  get firestore() {
+    return FirestoreModule.firestore;
+  }
+  get name() {
+    return this.creative.name;
+  }
+  get device() {
+    return this.creative.device;
+  }
+  get size() {
+    if (this.creative.size == "Size") {
+      return `${this.formData.width}x${this.formData.height}`;
+    }
+    return this.creative.size;
+  }
 
-  methods: {
-    addCreative() {
-      let id = `${this.getRandomInt(0, 99999999)}`;
-      let creative = Object.assign({}, { ...this.creative });
-      creative.size = this.size;
-      // this.$store.dispatch(ADD_CREATIVE, creative);
-      this.$store.state.database
-        .collection("creatives")
-        .doc(id)
-        .set(creative);
-    },
-    [TOGGLE_ADD_MODE]() {
-      this.$store.dispatch(TOGGLE_ADD_MODE);
-    },
-    validateBeforeSubmit() {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          this.addCreative();
-        }
-      });
-    },
-    getRandomInt(min, max) {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
-  },
-};
+  addCreative() {
+    let id = `${this.getRandomInt(0, 99999999)}`;
+    let creative = Object.assign({}, { ...this.creative });
+    creative.size = this.size;
+    this.firestore
+      .collection("creatives")
+      .doc(id)
+      .set(creative);
+  }
+  toggleAddMode() {
+    CreativesModule.ToggleAddMode();
+  }
+  validateBeforeSubmit() {
+    this.$validator.validateAll().then(result => {
+      if (result) {
+        this.addCreative();
+      }
+    });
+  }
+  getRandomInt(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -182,7 +176,7 @@ export default {
   background-color: #5c0000ee;
   border-radius: 5px;
   z-index: 999;
-  border: 1px solid #ffffff17;
+  border: 1px solid lighten(rgba($error-color, 0.7%), 5%);
 }
 .error::after {
   content: "";
@@ -193,7 +187,7 @@ export default {
   transform: translateX(-50%);
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid #5c0000ee;
+  border-bottom: 10px solid lighten(rgba($error-color, 0.7%), 5%);
 }
 .size-control {
   width: 104px;
@@ -211,7 +205,7 @@ input[type="radio"] + label > span {
   display: inline-block;
   width: 20px;
   height: 20px;
-  border: 1px solid #3388ff;
+  border: 1px solid $tertiary-color;
   margin: -1px 4px 0 0;
   vertical-align: middle;
   text-align: center;
@@ -225,7 +219,7 @@ input[type="radio"] + label > span > span {
 }
 
 input[type="radio"]:checked + label > span > span {
-  background-color: #3388ff;
+  background-color: $tertiary-color;
 }
 
 input[type="radio"] + label span,
@@ -234,7 +228,7 @@ input[type="radio"]:checked + label span {
 }
 
 button.active {
-  background-color: #3e4a5e;
+  background-color: $nav-color;
 }
 
 .line-break {
@@ -258,11 +252,11 @@ button.active {
 }
 .close-button {
   background-color: initial;
-  color: #fcaf19;
+  color: $secondary-color;
   &:active,
   &:hover {
     background-color: initial;
-    border: 1px solid #3e4a5e;
+    border: 1px solid $nav-color;
   }
 }
 
@@ -307,7 +301,7 @@ button.active {
   }
   display: block;
   max-width: 512px;
-  border: 1px solid #54637c;
+  border: 1px solid $nav-color;
   border-radius: 2px;
 }
 </style>

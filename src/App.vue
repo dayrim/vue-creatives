@@ -1,42 +1,32 @@
 <template>
   <div id="app" :class="{ ready: isPageReady }">
-    <div class="container">
-      <creative-list></creative-list>
-    </div>
+    <div class="container"><creative-list></creative-list></div>
   </div>
 </template>
 
-<script>
-import CreativeList from "./components/CreativeList.vue";
-export default {
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+import CreativeList from "@/components/CreativeList.vue";
+
+@Component({
   components: {
-    creativeList: CreativeList,
+    CreativeList,
   },
-  data() {
-    return {
-      isPageReady: false,
-    };
-  },
-  mounted: function() {
+})
+export default class App extends Vue {
+  public isPageReady: Boolean = true;
+
+  mounted() {
     this.$nextTick(function() {
       setTimeout(() => {
         this.isPageReady = true;
       }, 0);
     });
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Roboto");
-$primary-color: #1f2734;
-$secondary-color: #fcaf19;
-$tertiary-color: #3388ff;
-
-$nav-color: #3e4a5e;
-$default-color: #e5e5e5;
-
-$default-font: "Roboto", sans-serif;
 html {
   height: 100%;
 }

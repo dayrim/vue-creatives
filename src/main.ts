@@ -1,6 +1,6 @@
 import Vue from "vue";
-import App from "./App.vue";
-import store from "./data/store";
+import App from "@/App.vue";
+import store from "@/store";
 import VeeValidate from "vee-validate";
 import { ValidationProvider } from "vee-validate";
 

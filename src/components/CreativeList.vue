@@ -3,9 +3,7 @@
     <h3>My Creatives</h3>
     <button @click="toggleAddMode">Add</button>
     <hr />
-    <transition name="fade">
-      <new-creative v-if="addMode"></new-creative>
-    </transition>
+    <transition name="fade"> <new-creative v-if="addMode"></new-creative> </transition>
 
     <transition v-if="creatives.length > 0" name="fadeInUp" mode="out-in">
       <transition-group tag="table" name="fadeInUp" mode="out-in">
@@ -16,73 +14,75 @@
         </tr>
         <tr
           v-for="(creative, index) in creatives"
-          :key="index"
+          :key="index + 'id'"
           @click="removeCreative(creative.id)"
         >
           <td>{{ creative.name }}</td>
-          <td>
-            {{ creative.device }}
-          </td>
-          <td>
-            {{ creative.size }}
-          </td>
+          <td>{{ creative.device }}</td>
+          <td>{{ creative.size }}</td>
         </tr>
       </transition-group>
     </transition>
 
-    <transition v-else name="fadeInUp" mode="out-in">
-      <p>No creatives found</p>
-    </transition>
+    <transition v-else name="fadeInUp" mode="out-in"> <p>No creatives found</p> </transition>
   </div>
 </template>
-<script>
-import NewCreative from "./NewCreative.vue";
-import { TOGGLE_ADD_MODE, REMOVE_CREATIVE, ADD_CREATIVE, MODIFY_CREATIVE } from "../data/constants";
-import database from "../data/database";
 
-export default {
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+import FirestoreModule from "@/store/modules/firestore/firestore";
+import CreativesModule from "@/store/modules/creatives/creatives";
+import NewCreative from "@/components/NewCreative.vue";
+
+@Component({
   components: {
-    newCreative: NewCreative,
+    NewCreative,
   },
-  computed: {
-    addMode() {
-      return this.$store.state.addMode;
-    },
-    creatives() {
-      return this.$store.state.creatives;
-    },
-  },
+})
+export default class CreativeList extends Vue {
+  get firestore() {
+    return FirestoreModule.firestore;
+  }
+  get creatives() {
+    return CreativesModule.creatives;
+  }
+  get addMode() {
+    return CreativesModule.addMode;
+  }
   created() {
-    this.$store.state.database.collection("creatives").onSnapshot(snapCreatives => {
-      let source = snapCreatives.metadata.hasPendingWrites ? "Local" : "Server";
-
-      snapCreatives.docChanges().forEach(snapCreative => {
-        let docCreative = snapCreative.doc;
-        let id = docCreative.id;
-        if (snapCreative.type === "added") {
-          this.$store.dispatch(ADD_CREATIVE, { ...docCreative.data(), id });
-        }
-        if (snapCreative.type === "modified") {
-          this.$store.dispatch(MODIFY_CREATIVE, { ...docCreative.data(), id });
-        }
-        if (snapCreative.type === "removed") {
-          this.$store.dispatch(REMOVE_CREATIVE, docCreative.id);
-        }
+    this.firestore
+      .collection("creatives")
+      .onSnapshot(function(snapCreatives: import("firebase").firestore.QuerySnapshot) {
+        let source = snapCreatives.metadata.hasPendingWrites ? "Local" : "Server";
+        snapCreatives
+          .docChanges()
+          .forEach(function(snapCreative: import("firebase").firestore.DocumentChange) {
+            let docCreative = snapCreative.doc;
+            let creative = {
+              name: docCreative.data().name,
+              device: docCreative.data().device,
+              size: docCreative.data().size,
+              id: docCreative.id,
+            };
+            if (snapCreative.type === "added") {
+              CreativesModule.AddCreative(creative);
+            }
+            if (snapCreative.type === "removed") {
+              CreativesModule.RemoveCreative(creative.id);
+            }
+          });
       });
-    });
-  },
-  methods: {
-    toggleAddMode() {
-      this.$store.dispatch(TOGGLE_ADD_MODE);
-    },
-    removeCreative(id) {
-      this.$store.state.database
-        .collection("creatives")
-        .doc(id)
-        .delete();
-    },
-  },
-};
+  }
+  removeCreative(id: string) {
+    this.firestore
+      .collection("creatives")
+      .doc(id)
+      .delete();
+  }
+  toggleAddMode() {
+    CreativesModule.ToggleAddMode();
+  }
+}
 </script>
 <style scoped lang="scss">
 h3 {
