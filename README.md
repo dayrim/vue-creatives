@@ -8,11 +8,12 @@ Mockup: https://www.figma.com/file/UCt1aPkN1qOVdAboDO99gdAl/Test---Creative-list
 ## Local installation guide
 
 - Install node https://nodejs.org/en/.
+- *Optionaly Install yarn https://yarnpkg.com/en/
 - Download project or run `git clone https://github.com/dayrim/vue-creatives.gitt` to clone project.
 - Go to project root
 
 ## Project commands
-*If yarn is not installed it's possible to use 'npm' command with same flags.
+*Use 'npm' command with same flags if 'yarn' is not installed.
 
 ### Installs all dependencies
 ```
