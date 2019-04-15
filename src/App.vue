@@ -144,8 +144,10 @@ button {
   }
 }
 table {
-  border-collapse: collapse;
   width: 100%;
+}
+table td {
+  width: calc(100% / 3);
 }
 
 table td,

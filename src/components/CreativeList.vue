@@ -37,7 +37,9 @@
 </template>
 <script>
 import NewCreative from "./NewCreative.vue";
-import { TOGGLE_ADD_MODE, REMOVE_CREATIVE } from "../data/constants";
+import { TOGGLE_ADD_MODE, REMOVE_CREATIVE, ADD_CREATIVE, MODIFY_CREATIVE } from "../data/constants";
+import database from "../data/database";
+
 export default {
   components: {
     newCreative: NewCreative,
@@ -50,12 +52,34 @@ export default {
       return this.$store.state.creatives;
     },
   },
+  created() {
+    this.$store.state.database.collection("creatives").onSnapshot(snapCreatives => {
+      let source = snapCreatives.metadata.hasPendingWrites ? "Local" : "Server";
+
+      snapCreatives.docChanges().forEach(snapCreative => {
+        let docCreative = snapCreative.doc;
+        let id = docCreative.id;
+        if (snapCreative.type === "added") {
+          this.$store.dispatch(ADD_CREATIVE, { ...docCreative.data(), id });
+        }
+        if (snapCreative.type === "modified") {
+          this.$store.dispatch(MODIFY_CREATIVE, { ...docCreative.data(), id });
+        }
+        if (snapCreative.type === "removed") {
+          this.$store.dispatch(REMOVE_CREATIVE, docCreative.id);
+        }
+      });
+    });
+  },
   methods: {
-    [TOGGLE_ADD_MODE]() {
+    toggleAddMode() {
       this.$store.dispatch(TOGGLE_ADD_MODE);
     },
-    [REMOVE_CREATIVE](id) {
-      this.$store.dispatch(REMOVE_CREATIVE, id);
+    removeCreative(id) {
+      this.$store.state.database
+        .collection("creatives")
+        .doc(id)
+        .delete();
     },
   },
 };

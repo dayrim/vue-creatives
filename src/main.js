@@ -4,9 +4,6 @@ import store from "./data/store";
 import VeeValidate from "vee-validate";
 import { ValidationProvider } from "vee-validate";
 
-// Register it globally
-// main.js or any entry file.
-
 Vue.use(VeeValidate);
 Vue.component("ValidationProvider", ValidationProvider);
 

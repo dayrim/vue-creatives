@@ -143,11 +143,15 @@ export default {
   },
 
   methods: {
-    [ADD_CREATIVE]() {
-      let id = this.getRandomInt(0, 99999999);
-      let creative = Object.assign({}, { ...this.creative, id: id });
+    addCreative() {
+      let id = `${this.getRandomInt(0, 99999999)}`;
+      let creative = Object.assign({}, { ...this.creative });
       creative.size = this.size;
-      this.$store.dispatch(ADD_CREATIVE, creative);
+      // this.$store.dispatch(ADD_CREATIVE, creative);
+      this.$store.state.database
+        .collection("creatives")
+        .doc(id)
+        .set(creative);
     },
     [TOGGLE_ADD_MODE]() {
       this.$store.dispatch(TOGGLE_ADD_MODE);
